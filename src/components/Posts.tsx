@@ -1,25 +1,29 @@
-import React from "react";
+import NewPostForm from "./NewPostForm";
 import { makeStyles } from "@mui/styles";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
 
-interface PostsProps {
-    posts: { title: string; content: string }[];
-    newPost: { title: string; content: string };
-    onInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-    onAddPost: () => void;
+interface Post {
+    id: number;
+    title: string;
+    content: string;
 }
+
+interface PostsProps {}
 
 const useStyles = makeStyles({
     postsContainer: {
         display: "grid",
         gap: "10px",
+        margin: "0 20px", // Add left and right margin
         // Add any other styles you need for the container
     },
     postItem: {
-        // Add styles for individual post items
         border: "1px solid #ddd",
-        padding: "10px",
-        marginBottom: "10px",
+        padding: "20px", // Add padding all around the postItem container
         borderRadius: "5px",
+        marginTop: "10px", // Adjust the margin-top to reduce space between the top and title
     },
     title: {
         fontSize: "1.5rem", // Adjust the font size as needed
@@ -31,22 +35,43 @@ const useStyles = makeStyles({
     },
 });
 
-const Posts: React.FC<PostsProps> = ({ posts, newPost, onInputChange, onAddPost }) => {
+const Posts: React.FC<PostsProps> = () => {
+    const [posts, setPosts] = useState<Post[]>([]);
+    // const [newPost, setNewPost] = useState<Post>({ id: 0, title: "", content: "" });
+    const [addingNewPost, setAddingNewPost] = useState(false);
+
+    useEffect(() => {
+        axios
+            .get<Post[]>("http://localhost:3000/posts")
+            .then((response) => setPosts(response.data))
+            .catch((error) => console.error("Error fetching posts:", error));
+    }, []);
+
+    const handleAddPost = (newPost: Post) => {
+        axios
+            .post<Post>("http://localhost:3000/posts", newPost)
+            .then((response) => {
+                setPosts([...posts, response.data]);
+                setAddingNewPost(false);
+            })
+            .catch((error) => console.error("Error adding post:", error));
+    };
+
     const classes = useStyles();
     return (
         <div className={classes.postsContainer}>
             <h1>Blog Posts</h1>
-            {posts.map((post, index) => (
-                <div key={index} className={classes.postItem}>
-                    <h3 className={classes.title}>{post.title}</h3>
+            {!addingNewPost && <button onClick={() => setAddingNewPost(true)}>Add New Post</button>}
+
+            {addingNewPost && <NewPostForm onAddPost={handleAddPost} />}
+            {posts.map((post) => (
+                <div key={post.id} className={classes.postItem}>
+                    <Link to={`/posts/${post.id}`}>
+                        <h2 className={classes.title}>{post.title}</h2>
+                    </Link>
                     <p className={classes.content}>{post.content}</p>
                 </div>
             ))}
-
-            <h2>Add a New Post</h2>
-            <input type="text" placeholder="Title" name="title" value={newPost.title} onChange={onInputChange} />
-            <textarea placeholder="Content" name="content" value={newPost.content} onChange={onInputChange} />
-            <button onClick={onAddPost}>Add Post</button>
         </div>
     );
 };
