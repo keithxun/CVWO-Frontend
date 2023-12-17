@@ -1,53 +1,54 @@
-import React, { useState, useEffect, ChangeEvent } from "react";
-import axios from "axios";
+import React from "react";
+import { makeStyles } from "@mui/styles";
 
-interface Post {
-    title: string;
-    content: string;
+interface PostsProps {
+    posts: { title: string; content: string }[];
+    newPost: { title: string; content: string };
+    onInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+    onAddPost: () => void;
 }
-const Posts = () => {
-    const [posts, setPosts] = useState<Post[]>([]);
-    const [newPost, setNewPost] = useState<Post>({ title: "", content: "" });
 
-    useEffect(() => {
-        axios
-            .get<Post[]>("http://localhost:3000/posts")
-            .then((response) => setPosts(response.data))
-            .catch((error) => console.error("Error fetching posts:", error));
-    }, []); //Do this after render, function is passed into useEffect hook
+const useStyles = makeStyles({
+    postsContainer: {
+        display: "grid",
+        gap: "10px",
+        // Add any other styles you need for the container
+    },
+    postItem: {
+        // Add styles for individual post items
+        border: "1px solid #ddd",
+        padding: "10px",
+        marginBottom: "10px",
+        borderRadius: "5px",
+    },
+    title: {
+        fontSize: "1.5rem", // Adjust the font size as needed
+        fontWeight: "bold", // Make the title bold or adjust as needed
+        marginBottom: "8px", // Add some space between title and content
+    },
+    content: {
+        fontSize: "1rem", // Adjust the font size as needed
+    },
+});
 
-    const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        setNewPost({ ...newPost, [name]: value });
-    }; //Called when change in input field, updates newPost state
-
-    const handleAddPost = () => {
-        axios
-            .post<Post>("http://localhost:3000/posts", newPost)
-            .then((response) => {
-                setPosts([...posts, response.data]);
-                setNewPost({ title: "", content: "" });
-            })
-            .catch((error) => console.error("Error adding post:", error));
-    }; //Called when Add Post button is clicked, sends a POST request with data of newPost, New Post added to posts and New Post is reset
-
+const Posts: React.FC<PostsProps> = ({ posts, newPost, onInputChange, onAddPost }) => {
+    const classes = useStyles();
     return (
-        <div>
-            {JSON.stringify(posts)}
+        <div className={classes.postsContainer}>
             <h1>Blog Posts</h1>
-            {posts.map((posts, index) => (
-                <div key={index}>
-                    {posts.title}
-                    {posts.content}
+            {posts.map((post, index) => (
+                <div key={index} className={classes.postItem}>
+                    <h3 className={classes.title}>{post.title}</h3>
+                    <p className={classes.content}>{post.content}</p>
                 </div>
             ))}
 
             <h2>Add a New Post</h2>
-            <input type="text" placeholder="Title" name="title" value={newPost.title} onChange={handleInputChange} />
-            <textarea placeholder="Content" name="content" value={newPost.content} onChange={handleInputChange} />
-            <button onClick={handleAddPost}>Add Post</button>
+            <input type="text" placeholder="Title" name="title" value={newPost.title} onChange={onInputChange} />
+            <textarea placeholder="Content" name="content" value={newPost.content} onChange={onInputChange} />
+            <button onClick={onAddPost}>Add Post</button>
         </div>
-    ); //Renders list of blog posts by using map on posts array and input field for new post
+    );
 };
 
 export default Posts;
