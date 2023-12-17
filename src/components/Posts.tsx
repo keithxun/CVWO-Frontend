@@ -69,7 +69,7 @@ const Posts: React.FC<PostsProps> = () => {
                     <Link to={`/posts/${post.id}`}>
                         <h2 className={classes.title}>{post.title}</h2>
                     </Link>
-                    <p className={classes.content}>{post.content}</p>
+                    <p className={classes.content}>{post.content.slice(0, 50)}</p>
                 </div>
             ))}
         </div>
