@@ -33,9 +33,7 @@ const NewPostForm: React.FC<NewPostFormProps> = () => {
 
     const handleAddPost = async () => {
         try {
-            const response = await axios.post<Post>("http://localhost:3000/posts", newPost);
-            const updatedPost: Post = response.data;
-            console.log("New post added:", updatedPost);
+            await axios.post<Post>("http://localhost:3000/posts", newPost);
             setNewPost({ id: 0, title: "", content: "" });
             navigate("/");
         } catch (error) {
