@@ -3,11 +3,9 @@
 import React, { useState, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
-//import axios from "axios";
+import axios from "axios";
 
-interface NewPostFormProps {
-    onAddPost: (newPost: Post) => void;
-}
+interface NewPostFormProps {}
 
 interface Post {
     id: number;
@@ -29,24 +27,25 @@ const useStyles = makeStyles({
     },
 });
 
-const NewPostForm: React.FC<NewPostFormProps> = ({ onAddPost }) => {
+const NewPostForm: React.FC<NewPostFormProps> = () => {
     const [newPost, setNewPost] = useState<Post>({ id: 0, title: "", content: "" });
     const navigate = useNavigate();
+
+    const handleAddPost = async () => {
+        try {
+            const response = await axios.post<Post>("http://localhost:3000/posts", newPost);
+            const updatedPost: Post = response.data;
+            console.log("New post added:", updatedPost);
+            setNewPost({ id: 0, title: "", content: "" });
+            navigate("/");
+        } catch (error) {
+            console.error("Error adding post:", error);
+        }
+    };
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setNewPost({ ...newPost, [name]: value });
-    };
-
-    const handleAddPost = () => {
-        // Notify the parent component (Posts) about the new post
-        onAddPost(newPost);
-
-        // Reset the form
-        setNewPost({ id: 0, title: "", content: "" });
-
-        // Redirect to the main posts page after adding a new post
-        navigate("/");
     };
 
     const classes = useStyles();

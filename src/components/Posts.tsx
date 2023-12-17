@@ -1,7 +1,6 @@
-import NewPostForm from "./NewPostForm";
 import { makeStyles } from "@mui/styles";
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 interface Post {
@@ -37,8 +36,7 @@ const useStyles = makeStyles({
 
 const Posts: React.FC<PostsProps> = () => {
     const [posts, setPosts] = useState<Post[]>([]);
-    // const [newPost, setNewPost] = useState<Post>({ id: 0, title: "", content: "" });
-    const [addingNewPost, setAddingNewPost] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios
@@ -47,23 +45,11 @@ const Posts: React.FC<PostsProps> = () => {
             .catch((error) => console.error("Error fetching posts:", error));
     }, []);
 
-    const handleAddPost = (newPost: Post) => {
-        axios
-            .post<Post>("http://localhost:3000/posts", newPost)
-            .then((response) => {
-                setPosts([...posts, response.data]);
-                setAddingNewPost(false);
-            })
-            .catch((error) => console.error("Error adding post:", error));
-    };
-
     const classes = useStyles();
     return (
         <div className={classes.postsContainer}>
             <h1>Blog Posts</h1>
-            {!addingNewPost && <button onClick={() => setAddingNewPost(true)}>Add New Post</button>}
-
-            {addingNewPost && <NewPostForm onAddPost={handleAddPost} />}
+            <button onClick={() => navigate("/new-post-form")}>Add New Post</button>
             {posts.map((post) => (
                 <div key={post.id} className={classes.postItem}>
                     <Link to={`/posts/${post.id}`}>
