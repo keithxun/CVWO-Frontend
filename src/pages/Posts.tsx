@@ -5,7 +5,11 @@ import axios from "axios";
 
 interface PostsProps {}
 
-export interface Post {
+interface AuthStatus {
+    signedIn: boolean;
+}
+
+interface Post {
     id: number;
     title: string;
     content: string;
@@ -32,10 +36,14 @@ const useStyles = makeStyles({
     content: {
         fontSize: "1rem", // Adjust the font size as needed
     },
+    authStatus: {
+        marginBottom: "10px",
+    },
 });
 
 const Posts: React.FC<PostsProps> = () => {
     const [posts, setPosts] = useState<Post[]>([]);
+    const [authStatus, setAuthStatus] = useState<AuthStatus>({ signedIn: false });
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -43,13 +51,20 @@ const Posts: React.FC<PostsProps> = () => {
             .get<Post[]>("http://localhost:3000/posts")
             .then((response) => setPosts(response.data))
             .catch((error) => console.error("Error fetching posts:", error));
+        axios
+            .get<AuthStatus>("http://localhost:3000/users/check_authentication") // Replace with your backend endpoint
+            .then((response) => setAuthStatus(response.data))
+            .catch((error) => console.error("Error fetching auth status:", error));
     }, []);
 
     const classes = useStyles();
     return (
         <div className={classes.postsContainer}>
+            <div className={classes.authStatus}>{authStatus.signedIn ? `Signed in as Keith` : "Not signed in"}</div>
             <h1>Blog Posts</h1>
             <button onClick={() => navigate("/new-post-form")}>Add New Post</button>
+            <button onClick={() => navigate("/sign-in-form")}>Sign In</button>
+            <button onClick={() => navigate("/sign-up-form")}>Sign Up</button>
             {posts.map((post) => (
                 <div key={post.id} className={classes.postItem}>
                     <Link to={`/posts/${post.id}`}>

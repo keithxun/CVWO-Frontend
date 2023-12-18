@@ -7,7 +7,7 @@ import axios from "axios";
 
 interface NewPostFormProps {}
 
-export interface Post {
+interface Post {
     title: string;
     content: string;
 }
@@ -32,7 +32,6 @@ const NewPostForm: React.FC<NewPostFormProps> = () => {
 
     const handleAddPost = async () => {
         try {
-            console.log("Sending data:", { post: newPost });
             await axios.post<Post>("http://localhost:3000/posts", { post: newPost });
             setNewPost({ title: "", content: "" });
             navigate("/");
