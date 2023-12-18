@@ -8,7 +8,7 @@ interface CommentProps {
     };
 }
 
-const Comment: React.FC<CommentProps> = ({ comment }) => {
+const CommentContainer: React.FC<CommentProps> = ({ comment }) => {
     return (
         <div>
             <p>{comment.body}</p>
@@ -16,4 +16,4 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
     );
 };
 
-export default Comment;
+export default CommentContainer;

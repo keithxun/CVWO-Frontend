@@ -1,17 +1,12 @@
 // NewPostForm.tsx
 
+import { Post } from "../types/post";
 import React, { useState, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
 import axios from "axios";
 
 interface NewPostFormProps {}
-
-interface Post {
-    id: number;
-    title: string;
-    content: string;
-}
 
 const useStyles = makeStyles({
     inputContainer: {
