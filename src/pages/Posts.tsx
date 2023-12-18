@@ -1,10 +1,15 @@
-import { Post } from "../types/post";
 import { makeStyles } from "@mui/styles";
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 interface PostsProps {}
+
+export interface Post {
+    id: number;
+    title: string;
+    content: string;
+}
 
 const useStyles = makeStyles({
     postsContainer: {

@@ -1,10 +1,21 @@
 // SinglePost.js
-import { Post } from "../types/post";
-import { Comment } from "../types/comment";
+
 import CommentContainer from "../components/CommentContainer";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+
+export interface Comment {
+    id: number;
+    body: string;
+    postId: number;
+}
+
+export interface Post {
+    id: number;
+    title: string;
+    content: string;
+}
 
 const SinglePost: React.FC = () => {
     const { postId } = useParams<{ postId: string }>();

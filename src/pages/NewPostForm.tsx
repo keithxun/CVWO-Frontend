@@ -1,12 +1,16 @@
 // NewPostForm.tsx
 
-import { Post } from "../types/post";
 import React, { useState, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
 import axios from "axios";
 
 interface NewPostFormProps {}
+
+export interface Post {
+    title: string;
+    content: string;
+}
 
 const useStyles = makeStyles({
     inputContainer: {
@@ -23,13 +27,14 @@ const useStyles = makeStyles({
 });
 
 const NewPostForm: React.FC<NewPostFormProps> = () => {
-    const [newPost, setNewPost] = useState<Post>({ id: 0, title: "", content: "" });
+    const [newPost, setNewPost] = useState<Post>({ title: "", content: "" });
     const navigate = useNavigate();
 
     const handleAddPost = async () => {
         try {
-            await axios.post<Post>("http://localhost:3000/posts", newPost);
-            setNewPost({ id: 0, title: "", content: "" });
+            console.log("Sending data:", { post: newPost });
+            await axios.post<Post>("http://localhost:3000/posts", { post: newPost });
+            setNewPost({ title: "", content: "" });
             navigate("/");
         } catch (error) {
             console.error("Error adding post:", error);
