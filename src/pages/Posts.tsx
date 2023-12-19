@@ -5,9 +5,9 @@ import axios from "axios";
 
 interface PostsProps {}
 
-interface AuthStatus {
-    signedIn: boolean;
-}
+// interface AuthStatus {
+//     signedIn: boolean;
+// }
 
 interface Post {
     id: number;
@@ -43,7 +43,7 @@ const useStyles = makeStyles({
 
 const Posts: React.FC<PostsProps> = () => {
     const [posts, setPosts] = useState<Post[]>([]);
-    const [authStatus, setAuthStatus] = useState<AuthStatus>({ signedIn: false });
+    // const [authStatus, setAuthStatus] = useState<AuthStatus>({ signedIn: false });
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -51,16 +51,16 @@ const Posts: React.FC<PostsProps> = () => {
             .get<Post[]>("http://localhost:3000/posts")
             .then((response) => setPosts(response.data))
             .catch((error) => console.error("Error fetching posts:", error));
-        axios
-            .get<AuthStatus>("http://localhost:3000/users/check_authentication") // Replace with your backend endpoint
-            .then((response) => setAuthStatus(response.data))
-            .catch((error) => console.error("Error fetching auth status:", error));
+        // axios
+        //     .get<AuthStatus>("http://localhost:3000/users/check_authentication") // Replace with your backend endpoint
+        //     .then((response) => setAuthStatus(response.data))
+        //     .catch((error) => console.error("Error fetching auth status:", error));
     }, []);
 
     const classes = useStyles();
     return (
         <div className={classes.postsContainer}>
-            <div className={classes.authStatus}>{authStatus.signedIn ? `Signed in as Keith` : "Not signed in"}</div>
+            {/* <div className={classes.authStatus}>{authStatus.signedIn ? `Signed in as Keith` : "Not signed in"}</div> */}
             <h1>Blog Posts</h1>
             <button onClick={() => navigate("/new-post-form")}>Add New Post</button>
             <button onClick={() => navigate("/sign-in-form")}>Sign In</button>

@@ -26,7 +26,7 @@ const SinglePost: React.FC = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        //retrieve list of posts
+        //retrieve post details
         axios
             .get<Post>(`http://localhost:3000/posts/${postId}`)
             .then((response) => setPost(response.data))

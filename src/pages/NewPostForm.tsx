@@ -41,8 +41,8 @@ const NewPostForm: React.FC<NewPostFormProps> = () => {
     };
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        setNewPost({ ...newPost, [name]: value });
+        const { name, value } = e.target; //set object to current inputs
+        setNewPost({ ...newPost, [name]: value }); //update newPost to current inputs
     };
 
     const classes = useStyles();
