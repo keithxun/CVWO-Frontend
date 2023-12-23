@@ -33,6 +33,9 @@ export default function Header(props: HeaderProps) {
                 <Button variant="outlined" size="small" onClick={() => navigate("/sign-up")}>
                     Sign up
                 </Button>
+                <Button variant="outlined" size="small" onClick={() => navigate("/sign-in")}>
+                    Have an account? Sign in
+                </Button>
             </Toolbar>
             <Toolbar component="nav" variant="dense" sx={{ justifyContent: "space-between", overflowX: "auto" }}>
                 {sections.map((section) => (

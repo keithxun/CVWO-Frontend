@@ -1,72 +1,90 @@
-// NewPostForm.tsx
-
-import React, { useState, ChangeEvent } from "react";
-import { useNavigate } from "react-router-dom";
-import { makeStyles } from "@mui/styles";
+import * as React from "react";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
+import PostAddIcon from "@mui/icons-material/PostAdd";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-interface NewPostFormProps {}
+const defaultTheme = createTheme();
 
-interface Post {
-    title: string;
-    content: string;
-}
-
-const useStyles = makeStyles({
-    inputContainer: {
-        display: "grid",
-        gap: "10px",
-        margin: "0 20px",
-    },
-    textContainer: {
-        border: "1px solid #ddd",
-        padding: "20px", // Add padding all around the postItem container
-        borderRadius: "5px",
-        marginTop: "10px", // Adjust the margin-top to reduce space between the top and title
-    },
-});
-
-const NewPostForm: React.FC<NewPostFormProps> = () => {
-    const [newPost, setNewPost] = useState<Post>({ title: "", content: "" });
+export default function NewPost() {
     const navigate = useNavigate();
+    const [title, setTitle] = React.useState(""); // State to hold email input
+    const [content, setContent] = React.useState(""); // State to hold password input
 
-    const handleAddPost = async () => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault(); // Prevents the default form submission behavior
+
         try {
-            await axios.post<Post>("http://localhost:3000/posts", { post: newPost });
-            setNewPost({ title: "", content: "" });
+            await axios.post("http://localhost:3000/posts", {
+                post: {
+                    title,
+                    content,
+                },
+            });
             navigate("/");
         } catch (error) {
-            console.error("Error adding post:", error);
+            console.error("Error posting:", error);
         }
     };
 
-    const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target; //set object to current inputs
-        setNewPost({ ...newPost, [name]: value }); //update newPost to current inputs
-    };
-
-    const classes = useStyles();
     return (
-        <div>
-            <h2>Add a New Post</h2>
-            <input
-                type="text"
-                placeholder="Title"
-                name="title"
-                value={newPost.title}
-                onChange={handleInputChange}
-                className={classes.inputContainer}
-            />
-            <textarea
-                placeholder="Content"
-                name="content"
-                value={newPost.content}
-                onChange={handleInputChange}
-                className={classes.textContainer}
-            />
-            <button onClick={handleAddPost}>Add Post</button>
-        </div>
-    );
-};
+        <ThemeProvider theme={defaultTheme}>
+            <Container component="main">
+                <CssBaseline />
+                <Box
+                    sx={{
+                        marginTop: 8,
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                    }}
+                >
+                    <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+                        <PostAddIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        New Post
+                    </Typography>
+                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="title"
+                            label="Title"
+                            name="title"
+                            autoFocus
+                            value={title}
+                            multiline
+                            onChange={(e) => setTitle(e.target.value)}
+                        />
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="content"
+                            label="Content"
+                            type="content"
+                            id="content"
+                            value={content}
+                            multiline
+                            rows={14}
+                            onChange={(e) => setContent(e.target.value)}
+                        />
 
-export default NewPostForm;
+                        <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+                            Post
+                        </Button>
+                    </Box>
+                </Box>
+            </Container>
+        </ThemeProvider>
+    );
+}
