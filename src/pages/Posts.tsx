@@ -43,7 +43,6 @@ const useStyles = makeStyles({
 
 const Posts: React.FC<PostsProps> = () => {
     const [posts, setPosts] = useState<Post[]>([]);
-    // const [authStatus, setAuthStatus] = useState<AuthStatus>({ signedIn: false });
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -63,8 +62,8 @@ const Posts: React.FC<PostsProps> = () => {
             {/* <div className={classes.authStatus}>{authStatus.signedIn ? `Signed in as Keith` : "Not signed in"}</div> */}
             <h1>Blog Posts</h1>
             <button onClick={() => navigate("/new-post-form")}>Add New Post</button>
-            <button onClick={() => navigate("/sign-in-form")}>Sign In</button>
-            <button onClick={() => navigate("/sign-up-form")}>Sign Up</button>
+            <button onClick={() => navigate("/sign-in")}>Sign In</button>
+            <button onClick={() => navigate("/sign-up")}>Sign Up</button>
             {posts.map((post) => (
                 <div key={post.id} className={classes.postItem}>
                     <Link to={`/posts/${post.id}`}>
