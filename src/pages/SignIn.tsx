@@ -19,19 +19,31 @@ const defaultTheme = createTheme();
 
 export default function SignIn() {
     const navigate = useNavigate();
-    const [email, setEmail] = React.useState(""); // State to hold email input
-    const [password, setPassword] = React.useState(""); // State to hold password input
+    const [email, setEmail] = React.useState("");
+    const [password, setPassword] = React.useState("");
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault(); // Prevents the default form submission behavior
 
         try {
-            const response = await axios.post("http://localhost:3000/users/sign_in", {
+            const response = await axios.post("http://localhost:3000/login", {
                 user: {
                     email,
                     password,
                 },
             });
+
+            const authToken = response.headers["authorization"];
+            if (!authToken) {
+                console.error("Wrong");
+            }
+            // Store the login status and token in local storage
+            localStorage.setItem("isLoggedIn", "true");
+            localStorage.setItem("authToken", authToken);
+
+            // Set the Authorization header for future requests
+            // axios.defaults.headers.common["Authorization"] = `Bearer ${authToken}`;
+
             console.log("Sign In successful:", response.data);
             navigate("/");
         } catch (error) {

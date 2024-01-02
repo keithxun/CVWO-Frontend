@@ -26,7 +26,7 @@ export default function SignUp() {
         e.preventDefault(); // Prevents the default form submission behavior
 
         try {
-            const response = await axios.post("http://localhost:3000/users", {
+            const response = await axios.post("http://localhost:3000/signup", {
                 user: {
                     email,
                     password,
