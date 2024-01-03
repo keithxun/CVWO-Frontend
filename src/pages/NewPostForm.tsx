@@ -15,11 +15,11 @@ const defaultTheme = createTheme();
 
 export default function NewPost() {
     const navigate = useNavigate();
-    const [title, setTitle] = React.useState(""); // State to hold email input
-    const [content, setContent] = React.useState(""); // State to hold password input
+    const [title, setTitle] = React.useState("");
+    const [content, setContent] = React.useState("");
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault(); // Prevents the default form submission behavior
+        e.preventDefault();
 
         try {
             await axios.post("http://localhost:3000/posts", {

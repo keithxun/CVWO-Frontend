@@ -51,12 +51,10 @@ const SinglePost: React.FC = () => {
     });
 
     useEffect(() => {
-        //retrieve post details
         axios
             .get<Post>(`http://localhost:3000/posts/${postId}`)
             .then((response) => setPost(response.data))
             .catch((error) => console.error("Error fetching post:", error));
-        //retrieve list of comments
         axios
             .get<Comment[]>(`http://localhost:3000/posts/${postId}/comments`)
             .then((response) => setComments(response.data))
@@ -75,7 +73,6 @@ const SinglePost: React.FC = () => {
     const handleAddComment = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            // Make a POST request to add a new comment
             await axios.post<Comment>(`http://localhost:3000/posts/${postId}/comments`, {
                 body: newComment,
                 postId: Number(postId),

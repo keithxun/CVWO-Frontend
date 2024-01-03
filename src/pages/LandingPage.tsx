@@ -7,8 +7,7 @@ import Container from "@mui/material/Container";
 import axios from "axios";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import React, { useState, useEffect } from "react";
-
-// Define sections
+//not in use currently
 const sections = [
     { title: "Technology", url: "#" },
     { title: "Design", url: "#" },
@@ -22,17 +21,14 @@ const sections = [
     { title: "Travel", url: "#" },
 ];
 
-// Define Post interface
 interface Post {
     id: number;
     title: string;
     content: string;
 }
 
-// Create default theme
 const defaultTheme = createTheme();
 
-// Define Blog component
 export default function Blog() {
     const [posts, setPosts] = useState<Post[]>([]);
     const storedDarkMode = localStorage.getItem("DARK_MODE");

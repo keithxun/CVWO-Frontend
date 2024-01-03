@@ -19,12 +19,11 @@ const defaultTheme = createTheme();
 
 export default function SignUp() {
     const navigate = useNavigate();
-    const [email, setEmail] = React.useState(""); // State to hold email input
-    const [password, setPassword] = React.useState(""); // State to hold password input
+    const [email, setEmail] = React.useState("");
+    const [password, setPassword] = React.useState("");
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault(); // Prevents the default form submission behavior
-
+        e.preventDefault();
         try {
             const response = await axios.post("http://localhost:3000/signup", {
                 user: {

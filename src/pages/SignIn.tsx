@@ -23,7 +23,7 @@ export default function SignIn() {
     const [password, setPassword] = React.useState("");
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault(); // Prevents the default form submission behavior
+        e.preventDefault();
 
         try {
             const response = await axios.post("http://localhost:3000/login", {
@@ -37,11 +37,11 @@ export default function SignIn() {
             if (!authToken) {
                 console.error("Wrong");
             }
-            // Store the login status and token in local storage
+            // Store the login status and token in local storage, not working currently as authorization header is missing from response
             localStorage.setItem("isLoggedIn", "true");
             localStorage.setItem("authToken", authToken);
 
-            // Set the Authorization header for future requests
+            // Set the Authorization header for future requests, may not be required depending on ruby gem, not sure yet
             // axios.defaults.headers.common["Authorization"] = `Bearer ${authToken}`;
 
             console.log("Sign In successful:", response.data);
