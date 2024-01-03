@@ -6,18 +6,16 @@ import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
 import { useNavigate } from "react-router-dom";
 import * as React from "react";
-
 interface HeaderProps {
-    sections: ReadonlyArray<{
-        title: string;
-        url: string;
-    }>;
+    sections: Array<{ title: string; url: string }>;
     title: string;
+    darkMode: boolean;
+    toggleDarkMode: () => void;
 }
-
 export default function Header(props: HeaderProps) {
-    const { sections, title } = props;
+    const { sections, title, toggleDarkMode } = props;
     const navigate = useNavigate();
+
     return (
         <React.Fragment>
             <Toolbar sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -36,6 +34,7 @@ export default function Header(props: HeaderProps) {
                 <Button variant="outlined" size="small" onClick={() => navigate("/sign-in")}>
                     Have an account? Sign in
                 </Button>
+                <Button onClick={toggleDarkMode}>Toggle Dark Mode</Button>
             </Toolbar>
             <Toolbar component="nav" variant="dense" sx={{ justifyContent: "space-between", overflowX: "auto" }}>
                 {sections.map((section) => (

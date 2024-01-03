@@ -1,5 +1,9 @@
-// Comment.tsx
-import React from "react";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import * as React from "react";
+// import { useTheme } from "@mui/material";
 
 interface CommentProps {
     comment: {
@@ -8,12 +12,18 @@ interface CommentProps {
     };
 }
 
-const CommentContainer: React.FC<CommentProps> = ({ comment }) => {
+export default function PostContainer(props: CommentProps) {
+    const { comment } = props;
+    // const theme = useTheme();
     return (
-        <div>
-            <p>{comment.body}</p>
-        </div>
+        <Grid item xs={12} md={6} sx={{ mt: 2 }}>
+            <Card>
+                <CardContent sx={{ display: "flex" }}>
+                    <CardContent sx={{ flex: 1 }}>
+                        <Typography variant="subtitle1">{comment.body}</Typography>
+                    </CardContent>
+                </CardContent>
+            </Card>
+        </Grid>
     );
-};
-
-export default CommentContainer;
+}

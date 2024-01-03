@@ -1,8 +1,14 @@
-// SinglePost.js
-
 import CommentContainer from "../components/CommentContainer";
-import React, { useEffect, useState } from "react";
+import PostContainer from "../components/PostContainer";
+import Footer from "../components/Footer";
+import TextField from "@mui/material/TextField";
+import CssBaseline from "@mui/material/CssBaseline";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
 import axios from "axios";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 export interface Comment {
@@ -17,13 +23,32 @@ export interface Post {
     content: string;
 }
 
+const defaultTheme = createTheme();
+
 const SinglePost: React.FC = () => {
     const { postId } = useParams<{ postId: string }>();
     const [post, setPost] = useState<Post | null>(null);
     const [comments, setComments] = useState<Comment[]>([]);
-    const [addingComment, setAddingComment] = useState(false);
     const [newComment, setNewComment] = useState<string>("");
     const navigate = useNavigate();
+
+    // Retrieve the dark mode setting from local storage
+    const storedDarkMode = localStorage.getItem("DARK_MODE");
+    const [darkMode, setDarkMode] = useState(storedDarkMode === "true");
+
+    const toggleDarkMode = () => {
+        const newDarkMode = !darkMode;
+        setDarkMode(newDarkMode);
+        // Save the new setting in local storage
+        localStorage.setItem("DARK_MODE", String(newDarkMode));
+    };
+
+    const darkTheme = createTheme({
+        ...defaultTheme,
+        palette: {
+            mode: darkMode ? "dark" : "light",
+        },
+    });
 
     useEffect(() => {
         //retrieve post details
@@ -47,7 +72,8 @@ const SinglePost: React.FC = () => {
         }
     };
 
-    const handleAddComment = async () => {
+    const handleAddComment = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
         try {
             // Make a POST request to add a new comment
             await axios.post<Comment>(`http://localhost:3000/posts/${postId}/comments`, {
@@ -60,7 +86,6 @@ const SinglePost: React.FC = () => {
             setComments(updatedComments.data);
 
             // Reset state
-            setAddingComment(false);
             setNewComment("");
         } catch (error) {
             console.error("Error adding comment:", error);
@@ -72,28 +97,49 @@ const SinglePost: React.FC = () => {
     }
 
     return (
-        <div>
-            <h1>{post.title}</h1>
-            <p>{post.content}</p>
-            <button onClick={handleDeletePost}>Delete Post</button>
-            <h2>Comments</h2>
-            {comments.map((comment) => (
-                <CommentContainer key={comment.id} comment={comment} />
-            ))}
-            {!addingComment && <button onClick={() => setAddingComment(true)}>Add Comment</button>}
+        <ThemeProvider theme={darkTheme}>
+            <CssBaseline />
+            <Container sx={{ borderRadius: "10px", pb: 4 }}>
+                <main>
+                    <button onClick={toggleDarkMode}>Toggle Dark Mode</button>
+                    <Box mt={2}>
+                        <PostContainer key={post.title} post={post} />
+                    </Box>
+                    <Button
+                        onClick={handleDeletePost}
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        sx={{ mt: 3, mb: 2 }}
+                    >
+                        Delete Post
+                    </Button>
+                    <Box component="form" onSubmit={handleAddComment} noValidate sx={{ mt: 1 }}>
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="New Comment"
+                            label="New Comment"
+                            name="New Comment"
+                            autoFocus
+                            value={newComment}
+                            multiline
+                            onChange={(e) => setNewComment(e.target.value)}
+                        />
+                        <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+                            Add Comment
+                        </Button>
+                    </Box>
 
-            {addingComment && (
-                <div>
-                    <textarea
-                        placeholder="Your comment..."
-                        value={newComment}
-                        onChange={(e) => setNewComment(e.target.value)}
-                    />
-                    <button onClick={handleAddComment}>Add Comment</button>
-                    <button onClick={() => setAddingComment(false)}>Cancel</button>
-                </div>
-            )}
-        </div>
+                    {comments.map((comment) => (
+                        <CommentContainer key={comment.id} comment={comment} />
+                    ))}
+                </main>
+            </Container>
+
+            <Footer title="Motivation Quote" description="Do things without regrets!" />
+        </ThemeProvider>
     );
 };
 
