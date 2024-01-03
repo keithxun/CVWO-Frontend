@@ -15,6 +15,18 @@ interface HeaderProps {
 export default function Header(props: HeaderProps) {
     const { sections, title, toggleDarkMode } = props;
     const navigate = useNavigate();
+    const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+
+    React.useEffect(() => {
+        const authToken = localStorage.getItem("authToken");
+        setIsLoggedIn(!!authToken);
+    }, []);
+
+    const handleSignOut = () => {
+        // Clear authToken from local storage
+        localStorage.removeItem("authToken");
+        setIsLoggedIn(false);
+    };
 
     return (
         <React.Fragment>
@@ -28,12 +40,21 @@ export default function Header(props: HeaderProps) {
                 <IconButton>
                     <SearchIcon />
                 </IconButton>
-                <Button variant="outlined" size="small" onClick={() => navigate("/sign-up")}>
-                    Sign up
-                </Button>
-                <Button variant="outlined" size="small" onClick={() => navigate("/sign-in")}>
-                    Have an account? Sign in
-                </Button>
+                {!isLoggedIn && (
+                    <>
+                        <Button variant="outlined" size="small" onClick={() => navigate("/sign-up")}>
+                            Sign up
+                        </Button>
+                        <Button variant="outlined" size="small" onClick={() => navigate("/sign-in")}>
+                            Have an account? Sign in
+                        </Button>
+                    </>
+                )}
+                {isLoggedIn && (
+                    <Button variant="outlined" size="small" onClick={handleSignOut}>
+                        Sign out
+                    </Button>
+                )}
                 <Button onClick={toggleDarkMode}>Toggle Dark Mode</Button>
             </Toolbar>
             <Toolbar component="nav" variant="dense" sx={{ justifyContent: "space-between", overflowX: "auto" }}>

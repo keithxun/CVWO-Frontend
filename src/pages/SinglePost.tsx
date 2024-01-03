@@ -10,6 +10,7 @@ import axios from "axios";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export interface Comment {
     id: number;
@@ -35,7 +36,7 @@ const SinglePost: React.FC = () => {
     // Retrieve the dark mode setting from local storage
     const storedDarkMode = localStorage.getItem("DARK_MODE");
     const [darkMode, setDarkMode] = useState(storedDarkMode === "true");
-
+    const authToken = localStorage.getItem("authToken");
     const toggleDarkMode = () => {
         const newDarkMode = !darkMode;
         setDarkMode(newDarkMode);
@@ -63,7 +64,11 @@ const SinglePost: React.FC = () => {
 
     const handleDeletePost = async () => {
         try {
-            await axios.delete(`http://localhost:3000/posts/${postId}`);
+            await axios.delete(`http://localhost:3000/posts/${postId}`, {
+                headers: {
+                    Authorization: authToken,
+                },
+            });
             navigate("/");
         } catch (error) {
             console.error("Error deleting post:", error);
@@ -73,10 +78,18 @@ const SinglePost: React.FC = () => {
     const handleAddComment = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            await axios.post<Comment>(`http://localhost:3000/posts/${postId}/comments`, {
-                body: newComment,
-                postId: Number(postId),
-            });
+            await axios.post<Comment>(
+                `http://localhost:3000/posts/${postId}/comments`,
+                {
+                    body: newComment,
+                    postId: Number(postId),
+                },
+                {
+                    headers: {
+                        Authorization: authToken,
+                    },
+                },
+            );
 
             // Refetch comments to include the new one
             const updatedComments = await axios.get<Comment[]>(`http://localhost:3000/posts/${postId}/comments`);
@@ -85,7 +98,7 @@ const SinglePost: React.FC = () => {
             // Reset state
             setNewComment("");
         } catch (error) {
-            console.error("Error adding comment:", error);
+            toast.error("You are not signed in");
         }
     };
 

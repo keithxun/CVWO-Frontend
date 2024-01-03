@@ -10,6 +10,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const defaultTheme = createTheme();
 
@@ -22,15 +23,25 @@ export default function NewPost() {
         e.preventDefault();
 
         try {
-            await axios.post("http://localhost:3000/posts", {
-                post: {
-                    title,
-                    content,
+            const authToken = localStorage.getItem("authToken");
+
+            await axios.post(
+                "http://localhost:3000/posts",
+                {
+                    post: {
+                        title,
+                        content,
+                    },
                 },
-            });
+                {
+                    headers: {
+                        Authorization: authToken,
+                    },
+                },
+            );
             navigate("/");
         } catch (error) {
-            console.error("Error posting:", error);
+            toast.error("You are not signed in");
         }
     };
 
