@@ -8,10 +8,7 @@ function Copyright() {
     return (
         <Typography variant="body2" color="text.secondary" align="center">
             {"Copyright © "}
-            <Link color="inherit" href="https://mui.com/">
-                CVWO Application
-            </Link>{" "}
-            {new Date().getFullYear()}
+            <Link color="inherit">CVWO Application</Link> {new Date().getFullYear()}
             {"."}
         </Typography>
     );

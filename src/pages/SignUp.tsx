@@ -15,6 +15,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const defaultTheme = createTheme();
 
@@ -35,7 +36,7 @@ export default function SignUp() {
             console.log("Sign Up successful:", response.data);
             navigate("/");
         } catch (error) {
-            console.error("Error signing up:", error);
+            toast.error("Error signing up:");
         }
     };
 
@@ -75,7 +76,7 @@ export default function SignUp() {
                             required
                             fullWidth
                             name="password"
-                            label="Password"
+                            label="Password (Minimum 6 characters)"
                             type="password"
                             id="password"
                             autoComplete="current-password"

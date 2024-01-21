@@ -15,6 +15,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const defaultTheme = createTheme();
 
@@ -36,7 +37,7 @@ export default function SignIn() {
 
             const authToken = response.headers["authorization"];
             if (!authToken) {
-                console.error("Wrong");
+                toast.error("Wrong Credentials");
             }
             // Store the login status and token in local storage, not working currently as authorization header is missing from response
             localStorage.setItem("isLoggedIn", "true");
