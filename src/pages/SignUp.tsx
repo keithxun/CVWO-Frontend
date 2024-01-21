@@ -1,3 +1,4 @@
+import { BASE_URL } from "../api";
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -25,7 +26,7 @@ export default function SignUp() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://localhost:3000/signup", {
+            const response = await axios.post(`${BASE_URL}/signup`, {
                 user: {
                     email,
                     password,

@@ -7,15 +7,26 @@ import Link from "@mui/material/Link";
 import { useNavigate } from "react-router-dom";
 import * as React from "react";
 interface HeaderProps {
-    sections: Array<{ title: string; url: string }>;
-    title: string;
     darkMode: boolean;
     toggleDarkMode: () => void;
 }
 export default function Header(props: HeaderProps) {
-    const { sections, title, toggleDarkMode } = props;
+    const { toggleDarkMode } = props;
     const navigate = useNavigate();
     const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+
+    const sections = [
+        { title: "Technology", url: "#" },
+        { title: "Design", url: "#" },
+        { title: "Culture", url: "#" },
+        { title: "Business", url: "#" },
+        { title: "Politics", url: "#" },
+        { title: "Opinion", url: "#" },
+        { title: "Science", url: "#" },
+        { title: "Health", url: "#" },
+        { title: "Style", url: "#" },
+        { title: "Travel", url: "#" },
+    ];
 
     React.useEffect(() => {
         const authToken = localStorage.getItem("authToken");
@@ -28,6 +39,7 @@ export default function Header(props: HeaderProps) {
         setIsLoggedIn(false);
     };
 
+    const title = isLoggedIn ? "Account Name" : "Blog";
     return (
         <React.Fragment>
             <Toolbar sx={{ borderBottom: 1, borderColor: "divider" }}>

@@ -1,3 +1,4 @@
+import { BASE_URL } from "../api";
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -26,7 +27,7 @@ export default function SignIn() {
         e.preventDefault();
 
         try {
-            const response = await axios.post("http://localhost:3000/login", {
+            const response = await axios.post(`${BASE_URL}/login`, {
                 user: {
                     email,
                     password,

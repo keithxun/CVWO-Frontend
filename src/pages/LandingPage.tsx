@@ -1,25 +1,13 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import FeaturedPost from "../components/FeaturedPostContainer";
+import { BASE_URL } from "../api";
 import CssBaseline from "@mui/material/CssBaseline";
 import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
 import axios from "axios";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import React, { useState, useEffect } from "react";
-//not in use currently
-const sections = [
-    { title: "Technology", url: "#" },
-    { title: "Design", url: "#" },
-    { title: "Culture", url: "#" },
-    { title: "Business", url: "#" },
-    { title: "Politics", url: "#" },
-    { title: "Opinion", url: "#" },
-    { title: "Science", url: "#" },
-    { title: "Health", url: "#" },
-    { title: "Style", url: "#" },
-    { title: "Travel", url: "#" },
-];
 
 interface Post {
     id: number;
@@ -37,7 +25,7 @@ export default function Blog() {
 
     useEffect(() => {
         axios
-            .get<Post[]>("http://localhost:3000/posts")
+            .get<Post[]>(`${BASE_URL}/posts`)
             .then((response) => setPosts(response.data))
             .catch((error) => console.error("Error fetching posts:", error));
     }, []);
@@ -64,7 +52,7 @@ export default function Blog() {
                     pb: 4,
                 }}
             >
-                <Header title="Blog" sections={sections} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+                <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
                 <main>
                     <Grid container spacing={4}>
                         {posts.map((post) => (

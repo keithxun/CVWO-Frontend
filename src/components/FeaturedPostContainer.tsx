@@ -3,10 +3,8 @@ import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import CardActionArea from "@mui/material/CardActionArea";
 import CardContent from "@mui/material/CardContent";
-// import CardMedia from "@mui/material/CardMedia";
 import { Link } from "react-router-dom";
 import * as React from "react";
-// import { useTheme } from "@mui/material";
 
 interface FeaturedPostProps {
     post: {
@@ -19,7 +17,7 @@ interface FeaturedPostProps {
 
 export default function FeaturedPost(props: FeaturedPostProps) {
     const { post } = props;
-    // const theme = useTheme();
+
     const previewContent = () => {
         const maxLength = 200;
         if (post.content.length <= maxLength) {

@@ -1,6 +1,8 @@
 import CommentContainer from "../components/CommentContainer";
 import PostContainer from "../components/PostContainer";
 import Footer from "../components/Footer";
+import Header from "../components/Header";
+import { BASE_URL } from "../api";
 import TextField from "@mui/material/TextField";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
@@ -53,25 +55,25 @@ const SinglePost: React.FC = () => {
 
     useEffect(() => {
         axios
-            .get<Post>(`http://localhost:3000/posts/${postId}`)
+            .get<Post>(`${BASE_URL}/posts/${postId}`)
             .then((response) => setPost(response.data))
             .catch((error) => console.error("Error fetching post:", error));
         axios
-            .get<Comment[]>(`http://localhost:3000/posts/${postId}/comments`)
+            .get<Comment[]>(`${BASE_URL}/posts/${postId}/comments`)
             .then((response) => setComments(response.data))
             .catch((error) => console.error("Error fetching comment:", error));
     }, [postId]); //wrt to postId
 
     const handleDeletePost = async () => {
         try {
-            await axios.delete(`http://localhost:3000/posts/${postId}`, {
+            await axios.delete(`${BASE_URL}/posts/${postId}`, {
                 headers: {
                     Authorization: authToken,
                 },
             });
             navigate("/");
         } catch (error) {
-            console.error("Error deleting post:", error);
+            toast.error("You are not signed in");
         }
     };
 
@@ -79,7 +81,7 @@ const SinglePost: React.FC = () => {
         e.preventDefault();
         try {
             await axios.post<Comment>(
-                `http://localhost:3000/posts/${postId}/comments`,
+                `${BASE_URL}/posts/${postId}/comments`,
                 {
                     body: newComment,
                     postId: Number(postId),
@@ -92,7 +94,7 @@ const SinglePost: React.FC = () => {
             );
 
             // Refetch comments to include the new one
-            const updatedComments = await axios.get<Comment[]>(`http://localhost:3000/posts/${postId}/comments`);
+            const updatedComments = await axios.get<Comment[]>(`${BASE_URL}/posts/${postId}/comments`);
             setComments(updatedComments.data);
 
             // Reset state
@@ -110,8 +112,8 @@ const SinglePost: React.FC = () => {
         <ThemeProvider theme={darkTheme}>
             <CssBaseline />
             <Container sx={{ borderRadius: "10px", pb: 4 }}>
+                <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
                 <main>
-                    <button onClick={toggleDarkMode}>Toggle Dark Mode</button>
                     <Box mt={2}>
                         <PostContainer key={post.title} post={post} />
                     </Box>
